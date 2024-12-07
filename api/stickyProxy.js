@@ -1,28 +1,30 @@
 import fetch from 'node-fetch';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 
-const handler = async (req, res) => {
-  cors()(req, res, async () => {
+const app = express();
+const port = 3000;
+
+app.use(cors());
+
+app.get('/stickyProxy.js', async (req, res) => {
     const targetUrl = req.query.url;
 
     if (!targetUrl) {
-      console.error('No URL provided');
-      return res.status(400).send('URL parameter is missing');
+        return res.status(400).send('URL parameter is required');
     }
 
     try {
-      const response = await fetch(targetUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch the URL: ${response.statusText}`);
-      }
-
-      const body = await response.text();
-      res.setHeader('Content-Type', 'text/html');
-      res.send(body);
+        const response = await fetch(targetUrl);
+        const body = await response.text();
+        
+        res.setHeader('Content-Type', 'text/html');
+        res.send(body);
     } catch (error) {
-      console.error('Error fetching the URL:', error);
-      res.status(500).send(`Internal server error: ${error.message}`);
+        res.status(500).send('Failed to fetch the URL');
     }
-  });
-};
-export default handler;
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
