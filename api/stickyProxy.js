@@ -7,7 +7,7 @@ const port = 3000;
 
 app.use(cors());
 
-app.get('/api/stickyProxy.js', async (req, res) => {
+app.get('/', async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
         return res.status(400).send('URL parameter is required');
