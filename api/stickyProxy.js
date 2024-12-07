@@ -9,15 +9,12 @@ app.use(cors());
 
 app.get('/stickyProxy.js', async (req, res) => {
     const targetUrl = req.query.url;
-
     if (!targetUrl) {
         return res.status(400).send('URL parameter is required');
     }
-
     try {
         const response = await fetch(targetUrl);
         const body = await response.text();
-        
         res.setHeader('Content-Type', 'text/html');
         res.send(body);
     } catch (error) {
