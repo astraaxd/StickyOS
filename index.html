@@ -5,47 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StickyOS</title>
 	<script>
-class IFramePlus {
+	class StickyFrame {
     constructor(containerId, proxyUrl) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
-            throw new Error("Container not found.");
+            throw new Error("Container element not found");
         }
         this.proxyUrl = proxyUrl;
     }
 
-    async loadUrl(url) {
+    async loadContent(url) {
         try {
             const response = await fetch(`${this.proxyUrl}?url=${encodeURIComponent(url)}`);
             if (!response.ok) {
-                throw new Error(`Failed to fetch URL: ${response.statusText}`);
+                throw new Error(`Failed to fetch content from: ${url}`);
             }
 
-            const html = await response.text();
-            this.renderHtml(html);
+            const htmlContent = await response.text();
+            this.createIframe(htmlContent);
         } catch (error) {
-            console.error("Error loading URL:", error);
-            this.container.innerHTML = `<p style="color: red;">Failed to load content.</p>`;
+            console.error('Error loading content:', error);
+            this.container.innerHTML = '<p style="color: red;">Unable to load content.</p>';
         }
     }
 
-    renderHtml(html) {
-        const iframe = document.createElement("iframe");
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
-        iframe.sandbox = "allow-scripts"; // Customize as needed
+    createIframe(html) {
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100vh';
+        iframe.style.border = 'none';
+        iframe.sandbox = 'allow-scripts allow-same-origin'; // Customize as needed
 
-        const blob = new Blob([html], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([html], { type: 'text/html' });
+        const objectUrl = URL.createObjectURL(blob);
 
-        iframe.src = url;
-        this.container.innerHTML = ""; // Clear previous content
+        iframe.src = objectUrl;
+        this.container.innerHTML = ''; // Clear existing content
         this.container.appendChild(iframe);
     }
 }
 
-	</script>
+</script>
     <style>
         body {
             margin: 0;
@@ -235,25 +235,32 @@ class IFramePlus {
         <p>Designed by <a href="#">Astraa__XD</a> with inspiration from Holy UB.</p>
     </footer>
     <script>
-        const iframePlus = new IFramePlus("iframe-container", document.getElementById("urlInput").value);
+        const stickyFrame = new StickyFrame('iframe-container', 'http://sticky-os.vercel.app/stickyProxy.js');
 
-        function loadURI() {
-            const url = document.getElementById("urlInput").value;
-            if (!url.startsWith('blob') && !url.startsWith('file')) {
-                iframePlus.loadUrl(url);
+        function loadContent() {
+            const url = document.getElementById('urlInput').value;
+            if (url) {
+                iframePlus.loadContent(url);
+            } else {
+                alert('Please enter a URL');
             }
-		}
+        }
 
         function injectJS() {
-            const iframe = document.getElementById("dynamicIframe");
-            const jsCode = document.getElementById("jsInput").value;
-            const script = document.createElement('script');
-            script.innerHTML = jsCode;
-            iframe.contentWindow.document.body.appendChild(script);
+            const iframe = document.querySelector('iframe');
+            const jsCode = document.getElementById('jsInput').value;
+
+            if (iframe && jsCode) {
+                const script = document.createElement('script');
+                script.innerHTML = jsCode;
+                iframe.contentWindow.document.body.appendChild(script);
+            } else {
+                alert('No iframe loaded or JS code missing');
+            }
         }
 
         function toggleFullscreen() {
-            const iframeContainer = document.querySelector(".iframe-container");
+            const iframeContainer = document.getElementById('iframe-container');
             if (!document.fullscreenElement) {
                 iframeContainer.requestFullscreen();
             } else if (document.exitFullscreen) {

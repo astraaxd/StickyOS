@@ -1,27 +1,34 @@
+import express from 'express';
 import fetch from 'node-fetch';
-const express = require('express');
-const cors = require('cors');
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
 
 app.use(cors());
 
-app.get('/', async (req, res) => {
+// Proxy endpoint to fetch and return HTML content
+app.get('/proxy', async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
-        return res.status(400).send('URL parameter is required');
+        return res.status(400).json({ error: 'URL parameter is required' });
     }
+
     try {
         const response = await fetch(targetUrl);
+        if (!response.ok) {
+            throw new Error('Failed to fetch the content');
+        }
+
         const body = await response.text();
         res.setHeader('Content-Type', 'text/html');
         res.send(body);
     } catch (error) {
-        res.status(500).send('Failed to fetch the URL');
+        console.error('Error fetching URL:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Sticky Proxy server is running at http://localhost:${port}`);
 });
