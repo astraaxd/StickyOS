@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StickyOS</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            position: relative;
+            overflow: auto;
+            background: #1e1e2f;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://wyvern.wtf/img.webp') no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(50px) brightness(0.5);
+            z-index: -1;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        .search-bar-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            width: 95%;
+            max-width: 800px;
+            padding: 10px 15px;
+            border: 1px solid #444;
+            border-radius: 25px;
+            background-color: #2a2a3b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .search-bar input {
+            flex-grow: 1;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 1em;
+            outline: none;
+            padding: 5px;
+        }
+
+        .search-bar button {
+            background: #3a7dbb;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 8px;
+            transition: background 0.2s;
+        }
+
+        .search-bar button:hover {
+            background: #2d5e8c;
+        }
+
+        textarea {
+            width: 95%;
+            height: 150px;
+            margin: 20px auto;
+            padding: 12px 16px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #2a2a3b;
+            color: white;
+            font-size: 1.2em;
+            resize: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: #3a7dbb;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button:hover {
+            background: #2d5e8c;
+            transform: translateY(-3px);
+        }
+
+        .iframe-container {
+            position: relative;
+            margin-top: 20px;
+            width: 95%;
+            max-width: 1200px;
+            height: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .fullscreen-button {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 8px 16px;
+            background: #3a7dbb;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .fullscreen-button:hover {
+            background: #2d5e8c;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #b0b0b0;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="overlay"></div>
+
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <input id="urlInput" type="text" placeholder="Search or enter web address" />
+            <button onclick="loadUrl()">Go</button>
+        </div>
+    </div>
+
+    <textarea id="jsInput" placeholder="Enter JavaScript here"></textarea>
+    <button onclick="injectJS()">Inject!</button>
+
+    <div class="iframe-container" id="iframe-container">
+        <iframe id="dynamicIframe"></iframe>
+        <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
+
+    <footer>
+        <p>Designed by <a href="#">Astraa__XD</a> with inspiration from Holy UB.</p>
+    </footer>
+
+    <script>
+        function loadUrl() {
+            const url = document.getElementById("urlInput").value;
+            const jsCode = document.getElementById("jsInput").value;
+            fetch(`/api/loadUrl?url=${encodeURIComponent(url)}&jsCode=${encodeURIComponent(jsCode)}`)
+                .then(response => response.text())
+                .then(content => {
+                    const iframe = document.getElementById("dynamicIframe");
+                    iframe.srcdoc = content;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function injectJS() {
+            const iframe = document.getElementById("dynamicIframe");
+            const jsCode = document.getElementById("jsInput").value;
+            const script = document.createElement('script');
+            script.innerHTML = jsCode;
+            iframe.contentWindow.document.body.appendChild(script);
+        }
+
+        function toggleFullscreen() {
+            const iframeContainer = document.querySelector(".iframe-container");
+            if (!document.fullscreenElement) {
+                iframeContainer.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
