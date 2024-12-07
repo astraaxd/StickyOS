@@ -16,7 +16,6 @@ class IFramePlus {
             const data = await response.text();
             this.renderHtml(data);
         } catch (error) {
-            console.error('Error loading URL:', error);
         }
     }
 

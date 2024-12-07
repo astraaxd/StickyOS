@@ -10,7 +10,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "stickyProxy.js",
+      "src": "api/stickyProxy.js",
       "use": "@vercel/node"
     }
   ],
@@ -20,8 +20,8 @@
       "dest": "/stickyFrame.js"
     },
     {
-      "src": "/stickyProxy.js",
-      "dest": "/stickyProxy.js"
+      "src": "/api/stickyProxy.js",
+      "dest": "/api/stickyProxy.js"
     },
     {
       "src": "/(.*)",
