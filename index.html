@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StickyOS</title>
+	<script src="./stickyFrame.js"></script>
     <style>
         body {
             margin: 0;
@@ -192,10 +193,8 @@
     <footer>
         <p>Designed by <a href="#">Astraa__XD</a> with inspiration from Holy UB.</p>
     </footer>
-
-<script src="stickyFrame.js"></script>
     <script>
-        const iframePlus = new IFramePlus("iframe-container", "https://sticky-os.vercel.app/stickyProxy.js");
+        const iframePlus = new IFramePlus("iframe-container", "https://sticky-os.vercel.app");
 
         function loadURI() {
             const url = document.getElementById("urlInput").value;
