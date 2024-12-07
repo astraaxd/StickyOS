@@ -9,16 +9,14 @@ class IFramePlus {
 
     async loadUrl(url) {
         try {
-            const response = await fetch(`${this.proxyUrl}?url=${encodeURIComponent(url)}`);
+            const response = await fetch(`https://sticky-os.vercel.app/stickyProxy.js?url=${encodeURIComponent(url)}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch URL: ${response.statusText}`);
             }
-
-            const html = await response.text();
-            this.renderHtml(html);
+            const data = await response.text();
+            this.renderHtml(data);
         } catch (error) {
-            console.error("Error loading URL:", error);
-            this.container.innerHTML = `<p style="color: red;">Failed to load content.</p>`;
+            console.error('Error loading URL:', error);
         }
     }
 
@@ -28,16 +26,10 @@ class IFramePlus {
         iframe.style.height = "100%";
         iframe.style.border = "none";
         iframe.sandbox = "allow-scripts allow-same-origin";
-
         const blob = new Blob([html], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
-
-        iframe.src = url;
+        const blobUrl = URL.createObjectURL(blob);
+        iframe.src = blobUrl;
         this.container.innerHTML = "";
         this.container.appendChild(iframe);
     }
 }
-
-const proxyUrl = !window.location.hostname.includes("file")
-    ? "/proxy"
-    : "http://localhost:3000/proxy";

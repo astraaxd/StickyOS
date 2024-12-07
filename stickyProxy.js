@@ -6,8 +6,10 @@ import('node-fetch')
 
     const app = express();
     const port = 3000;
+
+    // CORS setup to allow requests from sticky-os.vercel.app
     app.use(cors({
-      origin: 'https://sticky-os.vercel.app'
+      origin: 'https://sticky-os.vercel.app'  // Your main domain
     }));
 
     app.get('/', async (req, res) => {
@@ -21,6 +23,7 @@ import('node-fetch')
         const response = await fetch(targetUrl, {
           method: 'GET',
           headers: {
+            // Add headers if necessary, like User-Agent, etc.
           }
         });
 
