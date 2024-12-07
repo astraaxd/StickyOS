@@ -235,38 +235,38 @@
         <p>Designed by <a href="#">Astraa__XD</a> with inspiration from Holy UB.</p>
     </footer>
     <script>
-        const stickyFrame = new StickyFrame('iframe-container', 'http://sticky-os.vercel.app/stickyProxy.js');
+    const stickyFrame = new StickyFrame('iframe-container', 'https://sticky-os.vercel.app/stickyProxy.js');
 
-        function loadURI() {
-            const url = document.getElementById('urlInput').value;
-            if (url) {
-                stickyFrame.loadContent(url);
-            } else {
-                alert('Please enter a URL');
-            }
+    function loadURI() {
+        const url = document.getElementById('urlInput').value;
+        if (url) {
+            stickyFrame.loadContent(url);
+        } else {
+            alert('Please enter a URL');
         }
+    }
 
-        function injectJS() {
-            const iframe = document.querySelector('iframe');
-            const jsCode = document.getElementById('jsInput').value;
+    function injectJS() {
+        const iframe = document.querySelector('iframe');
+        const jsCode = document.getElementById('jsInput').value;
 
-            if (iframe && jsCode) {
-                const script = document.createElement('script');
-                script.innerHTML = jsCode;
-                iframe.contentWindow.document.body.appendChild(script);
-            } else {
-                alert('No iframe loaded or JS code missing');
-            }
+        if (iframe && jsCode) {
+            const script = document.createElement('script');
+            script.innerHTML = jsCode;
+            iframe.contentWindow.document.body.appendChild(script);
+        } else {
+            alert('No iframe loaded or JS code missing');
         }
+    }
 
-        function toggleFullscreen() {
-            const iframeContainer = document.getElementById('iframe-container');
-            if (!document.fullscreenElement) {
-                iframeContainer.requestFullscreen();
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+    function toggleFullscreen() {
+        const iframeContainer = document.getElementById('iframe-container');
+        if (!document.fullscreenElement) {
+            iframeContainer.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
         }
-    </script>
+    }
+</script>
 </body>
 </html>
