@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StickyOS</title>
 	<script>
-	class StickyFrame {
+class StickyFrame {
     constructor(containerId, proxyUrl) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
-            throw new Error("Container element not found");
+            throw new Error("Container not found.");
         }
         this.proxyUrl = proxyUrl;
     }
@@ -18,33 +18,22 @@
         try {
             const response = await fetch(`${this.proxyUrl}?url=${encodeURIComponent(url)}`);
             if (!response.ok) {
-                throw new Error(`Failed to fetch content from: ${url}`);
+                throw new Error(`Failed to fetch URL: ${response.statusText}`);
             }
 
-            const htmlContent = await response.text();
-            this.createIframe(htmlContent);
+            const html = await response.text();
+            this.renderHtml(html);
         } catch (error) {
-            console.error('Error loading content:', error);
-            this.container.innerHTML = '<p style="color: red;">Unable to load content.</p>';
+            console.error("Error loading content:", error);
+            this.container.innerHTML = `<p style="color: red;">Failed to load content.</p>`;
         }
     }
 
-    createIframe(html) {
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '100%';
-        iframe.style.height = '100vh';
-        iframe.style.border = 'none';
-        iframe.sandbox = 'allow-scripts allow-same-origin'; // Customize as needed
-
-        const blob = new Blob([html], { type: 'text/html' });
-        const objectUrl = URL.createObjectURL(blob);
-
-        iframe.src = objectUrl;
-        this.container.innerHTML = ''; // Clear existing content
-        this.container.appendChild(iframe);
+    renderHtml(html) {
+        this.container.innerHTML = '';
+        this.container.innerHTML = html;
     }
 }
-
 </script>
     <style>
         body {
@@ -235,7 +224,7 @@
         <p>Designed by <a href="#">Astraa__XD</a> with inspiration from Holy UB.</p>
     </footer>
     <script>
-    const stickyFrame = new StickyFrame('iframe-container', 'https://sticky-os.vercel.app/api/stickyProxy.js');
+    const stickyFrame = new StickyFrame('iframe-container', '/api/stickyProxy.js');
 
     function loadURI() {
         const url = document.getElementById('urlInput').value;
