@@ -237,10 +237,10 @@
     <script>
         const stickyFrame = new StickyFrame('iframe-container', 'http://sticky-os.vercel.app/stickyProxy.js');
 
-        function loadContent() {
+        function loadURI() {
             const url = document.getElementById('urlInput').value;
             if (url) {
-                iframePlus.loadContent(url);
+                stickyFrame.loadContent(url);
             } else {
                 alert('Please enter a URL');
             }
