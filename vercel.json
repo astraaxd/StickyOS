@@ -20,7 +20,7 @@
       "dest": "/stickyFrame.js"
     },
     {
-      "src": "/api/stickyProxy.js",
+      "src": "/api/proxy",
       "dest": "/api/stickyProxy.js"
     },
     {
